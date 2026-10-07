@@ -251,3 +251,7 @@ The rubric names folders such as `backend/` and `k8s/`. The homework's required 
 - **Helm hooks interact with `--wait`.** A post-upgrade hook using a broken image blocked the release until it timed out.
 - **Git as the source of truth** turns deployments and rollbacks into normal commits with a full history.
 - **Infrastructure costs money while it runs.** EKS and NAT gateways bill by the hour, so destroy them right after testing.
+
+## License
+
+Released under the MIT License. See [LICENSE](../LICENSE) at the repository root.
