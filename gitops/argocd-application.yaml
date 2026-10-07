@@ -1,5 +1,5 @@
 # Argo CD watches the Helm chart in Git and keeps the cluster in sync with it.
-# Apply once:  kubectl apply -f final-devops-project/gitops/argocd-application.yaml
+# Apply once:  kubectl apply -f gitops/argocd-application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -10,9 +10,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Shubhamm-02/DevOps.git
+    repoURL: https://github.com/Shubhamm-02/stockwise-devops.git
     targetRevision: main
-    path: final-devops-project/helm/stockwise
+    path: helm/stockwise
     helm:
       valueFiles:
         - values.yaml

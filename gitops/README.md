@@ -26,7 +26,7 @@ Argo CD (in the cluster) ◄── pulls ──┘  notices the commit, renders 
 
 | File | Purpose |
 |---|---|
-| `gitops/argocd-application.yaml` | Points Argo CD at `final-devops-project/helm/stockwise` on `main`, with `values.yaml` and `values-gitops.yaml` |
+| `gitops/argocd-application.yaml` | Points Argo CD at `helm/stockwise` on `main`, with `values.yaml` and `values-gitops.yaml` |
 | `helm/stockwise/values-gitops.yaml` | Image tags (rewritten by CI) and the name of the database Secret |
 
 ## One-time setup
@@ -50,7 +50,7 @@ Argo CD (in the cluster) ◄── pulls ──┘  notices the commit, renders 
 
 4. **Register the application.**
    ```bash
-   kubectl apply -f final-devops-project/gitops/argocd-application.yaml
+   kubectl apply -f gitops/argocd-application.yaml
    kubectl get applications -n argocd -w
    ```
    It shows `Synced` and `Healthy` once the first CI run has written real image tags.

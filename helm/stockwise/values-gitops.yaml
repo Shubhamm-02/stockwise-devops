@@ -4,10 +4,10 @@
 # Argo CD notices the commit and rolls out the new images.
 backend:
   image:
-    tag: "fe689fea9a2d0df77110ac3986fc9f3479638e95"
+    tag: "pending-first-ci-run"
 frontend:
   image:
-    tag: "fe689fea9a2d0df77110ac3986fc9f3479638e95"
+    tag: "pending-first-ci-run"
 
 postgres:
   # Argo CD renders charts without cluster access, so the chart cannot generate and

@@ -9,7 +9,7 @@ config:
 
 backend:
   image:
-    repository: ghcr.io/shubhamm-02/devops/stockwise-backend
+    repository: ghcr.io/shubhamm-02/stockwise-devops/stockwise-backend
     tag: ""          # set to a Git commit SHA by CI; never "latest"
     pullPolicy: IfNotPresent
   replicaCount: 2
@@ -25,7 +25,7 @@ backend:
 
 frontend:
   image:
-    repository: ghcr.io/shubhamm-02/devops/stockwise-frontend
+    repository: ghcr.io/shubhamm-02/stockwise-devops/stockwise-frontend
     tag: ""
     pullPolicy: IfNotPresent
   replicaCount: 2
