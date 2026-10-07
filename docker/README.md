@@ -12,7 +12,7 @@ The frontend's nginx serves the React build and forwards `/api/` to the backend.
 ## Run the whole stack
 
 ```bash
-cd final-devops-project
+cd stockwise-devops
 docker compose -f docker/docker-compose.yml up --build -d
 docker compose -f docker/docker-compose.yml ps
 ./scripts/seed.sh http://localhost:8000

@@ -27,7 +27,7 @@ No AWS credentials are stored in these files. Terraform reads them from `aws con
 ## Workflow
 
 ```bash
-cd final-devops-project/terraform
+cd stockwise-devops/terraform
 cp terraform.tfvars.example terraform.tfvars
 aws sts get-caller-identity
 

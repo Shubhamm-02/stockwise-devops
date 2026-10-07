@@ -61,6 +61,6 @@ After the fix the frontend image is clean, and so is the backend image.
 ## Run the image gate locally
 
 ```bash
-cd final-devops-project
+cd stockwise-devops
 ./security/scan-images.sh
 ```

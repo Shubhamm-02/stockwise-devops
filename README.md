@@ -43,7 +43,8 @@ Code ─► GitHub ─► CI (test, build) ─► security scans ─► Docker i
 ## 3. Repository Structure
 
 ```
-final-devops-project/
+stockwise-devops/
+├── .github/workflows/ci-cd.yml  # CI/CD pipeline
 ├── application/
 │   ├── backend/                 # FastAPI app, Alembic migrations, 16 pytest tests, Dockerfile
 │   └── frontend/                # React app, nginx config, multi-stage Dockerfile
@@ -58,12 +59,9 @@ final-devops-project/
 ├── scripts/                     # seed.sh and load-test.sh
 ├── screenshots/
 ├── architecture.png / .svg
+├── LICENSE
 └── README.md
-
-.github/workflows/final-project-ci-cd.yml    # at the repository root, where GitHub requires it
 ```
-
-This project lives in a folder of the course homework repository. GitHub only runs workflows from the repository root, so the pipeline sits in `.github/workflows/` and uses a `paths` filter so that it runs only for this folder.
 
 ---
 
@@ -149,7 +147,7 @@ A VPC with 2 public and 2 private subnets, a NAT gateway, and an EKS cluster wit
 
 ## 9. CI/CD Pipeline
 
-[`.github/workflows/final-project-ci-cd.yml`](../.github/workflows/final-project-ci-cd.yml) runs on every push to `main`:
+[`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) runs on every push to `main`:
 
 | Stage | Jobs |
 |---|---|
@@ -157,7 +155,7 @@ A VPC with 2 public and 2 private subnets, a NAT gateway, and an EKS cluster wit
 | Security | `sast`, `sca`, `secret-scan` |
 | Images | `build-images` (both images, tagged with the commit SHA), `image-scan` (Trivy) |
 | Gate | `security-gate` waits for every check |
-| Delivery | `push-images` to `ghcr.io/shubhamm-02/devops/stockwise-{backend,frontend}:<sha>` |
+| Delivery | `push-images` to `ghcr.io/shubhamm-02/stockwise-devops/stockwise-{backend,frontend}:<sha>` |
 | Deployment | `deploy-test`: Helm install on a kind cluster in the runner, plus a smoke test |
 | GitOps | `gitops-update`: commits the new SHA to `values-gitops.yaml` |
 
@@ -254,4 +252,4 @@ The rubric names folders such as `backend/` and `k8s/`. The homework's required 
 
 ## License
 
-Released under the MIT License. See [LICENSE](../LICENSE) at the repository root.
+Released under the MIT License. See [LICENSE](LICENSE).

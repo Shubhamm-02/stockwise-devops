@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs the same image gate as the CI pipeline, locally:
 # fail on fixable HIGH or CRITICAL vulnerabilities in either image.
-# Usage: ./security/scan-images.sh   (from final-devops-project/)
+# Usage: ./security/scan-images.sh   (from the repository root)
 set -euo pipefail
 status=0
 for component in backend frontend; do
