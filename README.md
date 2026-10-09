@@ -363,18 +363,8 @@ This script shows a commit travelling all the way to the cluster.
 | **M10** Documentation | README explains the app | This file | ✅ |
 | | Live demo | [Section 15](#15-live-demo-m10) | Done at the presentation |
 
-## 17. Evidence Still to Capture
 
-
-| Rubric item | How to capture it | Replaces |
-|---|---|---|
-| M7: `terraform plan` output | `cd terraform && terraform plan` | `screenshots/terraform-plan.png` |
-| M7: `terraform apply` and nodes Ready | `terraform apply`, then `aws eks update-kubeconfig --region ap-south-1 --name stockwise-dev-eks` and `kubectl get nodes` | `screenshots/terraform-apply-eks-nodes.png` |
-| M7: AWS Console, VPC and EKS | In `ap-south-1`: VPC `stockwise-dev-vpc` and EKS cluster `stockwise-dev-eks` with its node group | `screenshots/aws-vpc-eks.png` |
-| M7: `terraform destroy` | `terraform destroy` finishing with `Destroy complete!` | `screenshots/terraform-destroy.png` |
-
-
-## 18. Lessons Learned
+## 17. Lessons Learned
 
 - **Readiness probes protect users.** In two troubleshooting cases, a broken new version never received traffic, because its pods never became Ready and the old pods kept serving.
 - **Security scanners find real problems.** Trivy flagged 42 HIGH vulnerabilities that came from the base image, not from my code. Base images need patching too.
