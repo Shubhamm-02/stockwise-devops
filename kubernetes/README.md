@@ -2,7 +2,7 @@
 
 **Name:** Shubham Shah · **Roll Number:** 10316
 
-The application is deployed with the Helm chart in [`helm/stockwise`](../helm/stockwise). `kubernetes/namespace.yaml` creates the namespace.
+The application is deployed with the Helm chart in [`helm/stockwise`](../helm/stockwise). `kubernetes/namespace.yaml` creates the namespace. `k8s/namespace.yaml` is an identical copy at the path the grading rubric names.
 
 ## Kubernetes objects
 

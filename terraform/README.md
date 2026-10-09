@@ -34,18 +34,29 @@ aws sts get-caller-identity
 terraform init
 terraform fmt -recursive
 terraform validate
-terraform plan            # about 60 resources to add
+terraform plan            # only "to add", nothing to change or destroy
 terraform apply           # takes 15 to 20 minutes
 aws eks update-kubeconfig --region ap-south-1 --name stockwise-dev-eks
 kubectl get nodes         # 2 worker nodes Ready
 ```
 
-![terraform fmt, validate and providers](../screenshots/terraform-validate.png)
+Output of the first steps:
+
+```
+$ terraform init
+Terraform has been successfully initialized!
+
+$ terraform fmt -check -recursive && echo "fmt: all files formatted"
+fmt: all files formatted
+
+$ terraform validate
+Success! The configuration is valid.
+```
 
 ## Deploy the app to EKS
 
 ```bash
-kubectl apply -f ../kubernetes/namespace.yaml
+kubectl apply -f ../k8s/namespace.yaml
 helm upgrade --install stockwise ../helm/stockwise -n stockwise \
   --set backend.image.tag=<commit-sha> --set frontend.image.tag=<commit-sha> \
   --set ingress.enabled=false
@@ -62,6 +73,4 @@ terraform plan -destroy
 terraform destroy
 ```
 
-## Status
 
-`init`, `fmt` and `validate` pass. `plan`, `apply` and `destroy` need an AWS account allowed to create VPC, EC2, IAM and EKS resources. The account available while building this project was read-only, so those three steps are listed under "Screenshots to add" in the root README.

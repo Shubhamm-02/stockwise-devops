@@ -1,5 +1,6 @@
 # Runs the whole application locally with one command:
 #   docker compose -f docker/docker-compose.yml up --build
+#   or, from the repository root: docker compose up --build
 name: stockwise
 
 services:

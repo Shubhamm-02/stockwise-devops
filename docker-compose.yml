@@ -1,0 +1,7 @@
+# Lets the rubric command work from the repository root:
+#   docker compose up --build
+# The stack itself is defined in docker/docker-compose.yml.
+name: stockwise
+
+include:
+  - docker/docker-compose.yml

@@ -13,8 +13,8 @@ The frontend's nginx serves the React build and forwards `/api/` to the backend.
 
 ```bash
 cd stockwise-devops
-docker compose -f docker/docker-compose.yml up --build -d
-docker compose -f docker/docker-compose.yml ps
+docker compose up --build -d
+docker compose ps
 ./scripts/seed.sh http://localhost:8000
 ```
 
@@ -31,6 +31,6 @@ PostgreSQL has a healthcheck. The backend waits for it, runs the Alembic migrati
 ## Stop
 
 ```bash
-docker compose -f docker/docker-compose.yml down      # keep the data
-docker compose -f docker/docker-compose.yml down -v   # also delete the database volume
+docker compose down      # keep the data
+docker compose down -v   # also delete the database volume
 ```
