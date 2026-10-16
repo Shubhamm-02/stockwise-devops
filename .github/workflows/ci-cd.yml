@@ -15,8 +15,8 @@ permissions:
   contents: read
 
 env:
-  BACKEND_DIR: application/backend
-  FRONTEND_DIR: application/frontend
+  BACKEND_DIR: backend
+  FRONTEND_DIR: frontend
 
 jobs:
   # ------------------------------------------------------------------ CI
@@ -78,7 +78,6 @@ jobs:
       - uses: github/codeql-action/init@v4
         with:
           languages: python, javascript-typescript
-          source-root: application
       - uses: github/codeql-action/analyze@v4
 
   sca:
@@ -121,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Build (tagged with the commit SHA, never "latest")
-        run: docker build -t stockwise-${{ matrix.component }}:${{ github.sha }} application/${{ matrix.component }}
+        run: docker build -t stockwise-${{ matrix.component }}:${{ github.sha }} ${{ matrix.component }}
       - name: Save image so later jobs use the exact same image
         run: docker save stockwise-${{ matrix.component }}:${{ github.sha }} -o /tmp/${{ matrix.component }}.tar
       - uses: actions/upload-artifact@v4
@@ -210,7 +209,7 @@ jobs:
           done
       - name: Helm install
         run: |
-          kubectl apply -f kubernetes/namespace.yaml
+          kubectl apply -f k8s/namespace.yaml
           helm upgrade --install stockwise helm/stockwise -n stockwise \
             --set backend.image.repository=stockwise-backend \
             --set backend.image.tag=${{ github.sha }} \
