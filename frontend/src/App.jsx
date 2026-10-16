@@ -196,7 +196,7 @@ export default function App() {
         )}
       </main>
 
-      <footer>StockWise · Final DevOps Project · Shubham Shah (10316)</footer>
+      <footer>StockWise · Final DevOps Project · Shubham Shah (10316) · Live demo </footer>
 
       {editing && <ProductForm initial={editing} saving={saving} onCancel={() => setEditing(null)} onSave={save} />}
     </div>
