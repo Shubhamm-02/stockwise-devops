@@ -353,7 +353,6 @@ This script shows a commit travelling all the way to the cluster.
 
 - **AWS vCPU quota.** The shared AWS account allows 8 vCPUs for standard instances, and other projects were using all of them. EKS needs 4 free vCPUs for its 2 worker nodes, so `terraform apply` can fail with `VcpuLimitExceeded` until capacity is freed or the quota is raised.
 - **Terraform screenshots.** Until a real EKS run can be recorded in the account above, the `terraform plan`, `apply`, AWS Console and `destroy` screenshots in section 10 are sample output. The Terraform code passes `init`, `fmt` and `validate`.
-- **GHCR images start private.** Both packages must be set to Public, or an image pull secret added, before a cluster outside GitHub Actions can pull them.
 - **Argo CD needs one manual step.** The database Secret is created by hand before the first sync, because Argo CD renders the chart without cluster access.
 - **Single NAT gateway.** Cheaper, but a single point of failure. Production would use one per Availability Zone.
 - **PostgreSQL runs inside the cluster.** Fine for this project. Production would use a managed database such as Amazon RDS.
