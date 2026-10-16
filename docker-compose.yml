@@ -1,7 +1,47 @@
-# Lets the rubric command work from the repository root:
+# Runs the whole application locally with one command:
 #   docker compose up --build
-# The stack itself is defined in docker/docker-compose.yml.
 name: stockwise
 
-include:
-  - docker/docker-compose.yml
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: stockwise
+      POSTGRES_USER: stockwise
+      # Local development default only. Override with an untracked .env file.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stockwise}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockwise -d stockwise"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://stockwise:${POSTGRES_PASSWORD:-stockwise}@postgres:5432/stockwise
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  frontend:
+    build: ./frontend
+    environment:
+      BACKEND_URL: http://backend:8000
+    ports:
+      - "3000:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
