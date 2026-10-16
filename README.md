@@ -4,7 +4,7 @@
 **Roll Number:** 10316  
 **Session 21:** Final DevOps Project and Troubleshooting  
 **Repository:** https://github.com/Shubhamm-02/stockwise-devops (public)  
-**PPT and Demo:** [StockWise presentation (PDF)](https://github.com/Shubhamm-02/stockwise-devops/blob/main/presentation/StockWise-Presentation.pdf) · [HTML version with speaker notes](presentation/StockWise-Presentation.html)
+**PPT and Demo:** [Slides (PDF)](https://github.com/Shubhamm-02/stockwise-devops/blob/main/demo/slides.pdf) · [Presentation video](https://github.com/Shubhamm-02/stockwise-devops/blob/main/demo/presentation.mp4)
 
 StockWise is an inventory management app for a small electronics store. Staff can add products, track stock levels, adjust quantities as goods arrive or ship, and see which items need reordering. Around the app sits the full DevOps toolchain from the course: Git, CI/CD, DevSecOps, Docker, Kubernetes, Helm, Terraform, monitoring and GitOps.
 
@@ -47,39 +47,22 @@ Code ─► GitHub ─► CI (test, build) ─► security scans ─► Docker i
 ```
 stockwise-devops/
 ├── .github/workflows/ci-cd.yml  # CI/CD pipeline
-├── application/
-│   ├── backend/                 # FastAPI app, Alembic migrations, 16 pytest tests, Dockerfile
-│   └── frontend/                # React app, nginx config, multi-stage Dockerfile
-├── docker-compose.yml           # Root entry point: `docker compose up --build`
-├── docker/                      # docker-compose.yml (frontend + backend + postgres)
-├── k8s/                         # namespace.yaml (path named in the grading rubric)
-├── kubernetes/                  # namespace.yaml and Kubernetes notes
+├── backend/                     # FastAPI app, Alembic migrations, 16 pytest tests, Dockerfile
+├── frontend/                    # React app, nginx config, multi-stage Dockerfile
+├── docker-compose.yml           # Full local stack: docker compose up --build
+├── k8s/                         # namespace.yaml and Kubernetes notes
 ├── helm/stockwise/              # Helm chart: deployments, services, ingress, HPA, secret, configmap, postgres, job
 ├── terraform/                   # AWS VPC + EKS
-├── security/                    # DevSecOps notes and a local image scan script
 ├── monitoring/                  # Prometheus and Grafana values, dashboard, alert rules
 ├── gitops/                      # Argo CD Application
 ├── troubleshooting/             # Final troubleshooting challenge
 ├── scripts/                     # seed.sh and load-test.sh
+├── demo/                        # slides.pdf and presentation.mp4
 ├── screenshots/
-├── architecture.png / .svg
+├── architecture.png
 ├── LICENSE
 └── README.md
 ```
-
-### Where the rubric paths live
-
-The homework's required layout puts the app under `application/` and the manifests under `kubernetes/`. The grading rubric uses shorter paths. This table maps one to the other.
-
-| Rubric path | In this repository |
-|---|---|
-| `backend/app/`, `backend/alembic/versions/`, `backend/requirements.txt` | `application/backend/app/`, `application/backend/alembic/versions/`, `application/backend/requirements.txt` |
-| `backend/tests/`, `backend/pytest.ini`, `backend/conftest.py` | `application/backend/tests/`, `application/backend/pytest.ini`, `application/backend/tests/conftest.py` |
-| `backend/Dockerfile`, `frontend/Dockerfile` | `application/backend/Dockerfile`, `application/frontend/Dockerfile` |
-| `frontend/` | `application/frontend/` |
-| `docker-compose.yml` | `docker-compose.yml` (includes `docker/docker-compose.yml`) |
-| `k8s/namespace.yaml` | `k8s/namespace.yaml` (same file as `kubernetes/namespace.yaml`) |
-| `helm/`, `terraform/`, `monitoring/`, `.github/workflows/` | Same paths |
 
 ---
 
@@ -106,7 +89,7 @@ Interactive API documentation is at `/docs`.
 
 ### Database
 
-PostgreSQL 16 stores the `products` table. Alembic creates it with the migration [`0001_create_products.py`](application/backend/alembic/versions/0001_create_products.py). The backend container runs `alembic upgrade head` before it starts. In Kubernetes a Helm hook Job runs it once per release.
+PostgreSQL 16 stores the `products` table. Alembic creates it with the migration [`0001_create_products.py`](backend/alembic/versions/0001_create_products.py). The backend container runs `alembic upgrade head` before it starts. In Kubernetes a Helm hook Job runs it once per release.
 
 ### Responsive UI
 
@@ -117,7 +100,7 @@ The React frontend calls `/api/products` and `/api/stats`. It has stat cards, se
 ## 5. Testing (M2)
 
 ```bash
-cd application/backend
+cd backend
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
 pytest -v --cov=app
@@ -142,7 +125,7 @@ docker compose up --build -d
 ./scripts/seed.sh http://localhost:8000
 ```
 
-Open http://localhost:3000. Details are in [docker/README.md](docker/README.md).
+Open http://localhost:3000.
 
 | Image | Build | Runs as |
 |---|---|---|
@@ -179,7 +162,7 @@ Images are never tagged `latest`. Every image can be traced to the exact commit 
 
 SAST (Bandit, CodeQL), SCA (pip-audit, npm audit), secret scanning (Gitleaks) and image scanning (Trivy) all run before anything is published. The `image-scan` job runs Trivy on **both** the backend and frontend images with `severity: HIGH,CRITICAL` and `exit-code: 1`, so any fixable HIGH or CRITICAL CVE fails the pipeline.
 
-**What Trivy scanned and what it found:** Trivy scanned the operating system packages and the Python and Node libraries inside both images. The first scan of the frontend image failed with 42 HIGH vulnerabilities, for example CVE-2026-14456, a denial of service flaw in the OpenSSL package of the Alpine base image. Running `apk upgrade` in the Dockerfile fixed it. Both images now scan clean, so they contain no known fixable HIGH or CRITICAL vulnerabilities. The full write-up is in [security/README.md](security/README.md).
+**What Trivy scanned and what it found:** Trivy scanned the operating system packages and the Python and Node libraries inside both images. The first scan of the frontend image failed with 42 HIGH vulnerabilities, for example CVE-2026-14456, a denial of service flaw in the OpenSSL package of the Alpine base image. Running `apk upgrade` in the Dockerfile fixed it. Both images now scan clean, so they contain no known fixable HIGH or CRITICAL vulnerabilities.
 
 ![Trivy before the fix](screenshots/trivy-frontend-before-fix.png)
 
@@ -241,7 +224,7 @@ The chart in [`helm/stockwise`](helm/stockwise) (`Chart.yaml`, `values.yaml`, `t
 - Ingress: `/` goes to the frontend and `/api` to the backend, host `stockwise.local`
 - ConfigMap, Secret, probes, resource limits, and a migration Job
 
-`helm lint` passes. Install, upgrade and rollback were all used in the troubleshooting challenge. Details are in [kubernetes/README.md](kubernetes/README.md).
+`helm lint` passes. Install, upgrade and rollback were all used in the troubleshooting challenge. Details are in [k8s/README.md](k8s/README.md).
 
 `kubectl get pods,svc,ingress,hpa,pvc -n stockwise` and `helm list -A`. All pods are Running:
 
@@ -293,7 +276,7 @@ Four problems were introduced into the running cluster and fixed: a bad image ta
 This script shows a commit travelling all the way to the cluster.
 
 1. Open the app and add a product.
-2. Make a visible change, for example the footer text in `application/frontend/src/App.jsx`, then commit and push:
+2. Make a visible change, for example the footer text in `frontend/src/App.jsx`, then commit and push:
    ```bash
    git commit -am "Change dashboard footer text for the live demo"
    git push origin main
@@ -320,7 +303,7 @@ This script shows a commit travelling all the way to the cluster.
 | **M1** Application | FastAPI `/health` | [Section 4](#4-application-m1), `test_health` | ✅ |
 | | 4+ REST endpoints (GET, POST, PUT, DELETE) | 7 product endpoints, [section 4](#4-application-m1) | ✅ |
 | | PostgreSQL table from Alembic | `alembic/versions/0001_create_products.py` | ✅ |
-| | Frontend renders and calls the API | `application/frontend/src/api.js`, `app-desktop.png` | ✅ |
+| | Frontend renders and calls the API | `frontend/src/api.js`, `app-desktop.png` | ✅ |
 | | Responsive UI | `app-mobile.png` | ✅ |
 | **M2** Testing | pytest passes | `pytest-results.png`: 16 passed | ✅ |
 | | 5+ tests over 3+ endpoints | 16 tests over every endpoint | ✅ |
@@ -329,8 +312,8 @@ This script shows a commit travelling all the way to the cluster.
 | **M3** Git | Public repo | https://github.com/Shubhamm-02/stockwise-devops | ✅ |
 | | Meaningful commits, 10+ | `git-commit-history.png` | ✅ |
 | | `.gitignore` | `.env`, `__pycache__`, `node_modules`, `.venv` | ✅ |
-| **M4** Docker | Backend Dockerfile builds | `application/backend/Dockerfile` | ✅ |
-| | Multi-stage frontend (Node + Nginx) | `application/frontend/Dockerfile` | ✅ |
+| **M4** Docker | Backend Dockerfile builds | `backend/Dockerfile` | ✅ |
+| | Multi-stage frontend (Node + Nginx) | `frontend/Dockerfile` | ✅ |
 | | Non-root images | uid 10001 and 101, `docker-compose-up.png` | ✅ |
 | | `docker compose up --build`, 3 services | Root `docker-compose.yml`, `docker-compose-up.png` | ✅ |
 | **M5** CI/CD | Workflow file | `.github/workflows/ci-cd.yml` | ✅ |
@@ -342,7 +325,7 @@ This script shows a commit travelling all the way to the cluster.
 | | SHA tags, not `latest` | `${{ github.sha }}` | ✅ |
 | **M6** DevSecOps | Trivy on both images | `image-scan` matrix | ✅ |
 | | Fails on HIGH/CRITICAL | `severity: HIGH,CRITICAL`, `exit-code: "1"` | ✅ |
-| | CVE explained | [Section 9](#9-devsecops-m6), `security/README.md` | ✅ |
+| | CVE explained | [Section 9](#9-devsecops-m6) | ✅ |
 | **M7** Terraform | Valid HCL in `terraform/` | `terraform validate` passes | ✅ |
 | | `terraform init` | Passes | ✅ |
 | | `terraform plan` non-empty, no errors | `terraform-plan.png`  | ✅ |
@@ -361,11 +344,23 @@ This script shows a commit travelling all the way to the cluster.
 | | Prometheus scraping the app | `prometheus-targets.png` | ✅ |
 | | Grafana installed | `grafana-dashboard.png` | ✅ |
 | | Panel with live app metrics | `grafana-dashboard.png` | ✅ |
-| **M10** Documentation | README explains the app | This file | ✅ |
-| | Live demo | [Section 15](#15-live-demo-m10) | Done at the presentation |
+| **M10** Documentation | README with full technical documentation | This file | ✅ |
+| | PPT slide deck in the repo | `demo/slides.pdf` | ✅ |
+| | Presentation video in the repo | `demo/presentation.mp4` | To be recorded |
 
 
-## 17. Lessons Learned
+## 17. Known Issues and Limitations
+
+- **AWS vCPU quota.** The shared AWS account allows 8 vCPUs for standard instances, and other projects were using all of them. EKS needs 4 free vCPUs for its 2 worker nodes, so `terraform apply` can fail with `VcpuLimitExceeded` until capacity is freed or the quota is raised.
+- **Terraform screenshots.** Until a real EKS run can be recorded in the account above, the `terraform plan`, `apply`, AWS Console and `destroy` screenshots in section 10 are sample output. The Terraform code passes `init`, `fmt` and `validate`.
+- **GHCR images start private.** Both packages must be set to Public, or an image pull secret added, before a cluster outside GitHub Actions can pull them.
+- **Argo CD needs one manual step.** The database Secret is created by hand before the first sync, because Argo CD renders the chart without cluster access.
+- **Single NAT gateway.** Cheaper, but a single point of failure. Production would use one per Availability Zone.
+- **PostgreSQL runs inside the cluster.** Fine for this project. Production would use a managed database such as Amazon RDS.
+- **CodeQL reports but does not block.** Its findings appear in GitHub's Security tab. Bandit is the static analysis check that fails the build.
+- **Local Ingress needs a port-forward.** With minikube on the Docker driver, the Ingress is reached through `kubectl port-forward` to the ingress controller.
+
+## 18. Lessons Learned
 
 - **Readiness probes protect users.** In two troubleshooting cases, a broken new version never received traffic, because its pods never became Ready and the old pods kept serving.
 - **Security scanners find real problems.** Trivy flagged 42 HIGH vulnerabilities that came from the base image, not from my code. Base images need patching too.

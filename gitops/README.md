@@ -64,7 +64,7 @@ Argo CD (in the cluster) ◄── pulls ──┘  notices the commit, renders 
 
 ## Demo: a change flows through Git
 
-1. Make a small change, for example the dashboard subtitle in `application/frontend/src/App.jsx`, then commit and push.
+1. Make a small change, for example the dashboard subtitle in `frontend/src/App.jsx`, then commit and push.
 2. Watch the pipeline finish. The last job commits `gitops: deploy StockWise <sha> [skip ci]`.
 3. In Argo CD the app goes `OutOfSync`, then `Synced`, and the new pods roll out.
    ```bash
