@@ -4,7 +4,7 @@
 **Roll Number:** 10316  
 **Session 21:** Final DevOps Project and Troubleshooting  
 **Repository:** https://github.com/Shubhamm-02/stockwise-devops (public)  
-**PPT and Demo:** [Slides (PDF)](https://github.com/Shubhamm-02/stockwise-devops/blob/main/demo/slides.pdf) · [Presentation video](https://github.com/Shubhamm-02/stockwise-devops/blob/main/demo/presentation.mp4)
+**PPT and Demo:** [Slides (PDF)](https://github.com/Shubhamm-02/stockwise-devops/blob/main/demo/slides.pdf) · [Presentation video](https://github.com/Shubhamm-02/stockwise-devops/blob/main/demo/presentation.mp4) (also on [Google Drive](https://drive.google.com/drive/folders/1qW1WQGYOln9FRDts_1LfMWdU7tjhEfag?usp=drive_link))
 
 StockWise is an inventory management app for a small electronics store. Staff can add products, track stock levels, adjust quantities as goods arrive or ship, and see which items need reordering. Around the app sits the full DevOps toolchain from the course: Git, CI/CD, DevSecOps, Docker, Kubernetes, Helm, Terraform, monitoring and GitOps.
 
@@ -172,7 +172,7 @@ SAST (Bandit, CodeQL), SCA (pip-audit, npm audit), secret scanning (Gitleaks) an
 
 ## 10. Terraform (M7)
 
-A VPC with 2 public and 2 private subnets, a NAT gateway, and an EKS cluster `stockwise-dev-eks` with a managed node group of 2 to 4 `t3.medium` nodes, in `ap-south-1`. Credentials come from `aws configure`. Only [`terraform.tfvars.example`](terraform/terraform.tfvars.example) is committed. Details are in [terraform/README.md](terraform/README.md).
+A VPC with 2 public and 2 private subnets, a NAT gateway, and an EKS cluster `stockwise-dev-eks` with a managed node group of 2 to 4 `m7i-flex.large` nodes, in `ap-south-1`. Credentials come from `aws configure`. Only [`terraform.tfvars.example`](terraform/terraform.tfvars.example) is committed. Details are in [terraform/README.md](terraform/README.md).
 
 ```bash
 cd terraform
@@ -346,13 +346,11 @@ This script shows a commit travelling all the way to the cluster.
 | | Panel with live app metrics | `grafana-dashboard.png` | ✅ |
 | **M10** Documentation | README with full technical documentation | This file | ✅ |
 | | PPT slide deck in the repo | `demo/slides.pdf` | ✅ |
-| | Presentation video in the repo | `demo/presentation.mp4` | To be recorded |
+| | Presentation video in the repo | `demo/presentation.mp4`, also on [Google Drive](https://drive.google.com/drive/folders/1qW1WQGYOln9FRDts_1LfMWdU7tjhEfag?usp=drive_link) | ✅ |
 
 
 ## 17. Known Issues and Limitations
 
-- **AWS vCPU quota.** The shared AWS account allows 8 vCPUs for standard instances, and other projects were using all of them. EKS needs 4 free vCPUs for its 2 worker nodes, so `terraform apply` can fail with `VcpuLimitExceeded` until capacity is freed or the quota is raised.
-- **Terraform screenshots.** Until a real EKS run can be recorded in the account above, the `terraform plan`, `apply`, AWS Console and `destroy` screenshots in section 10 are sample output. The Terraform code passes `init`, `fmt` and `validate`.
 - **Argo CD needs one manual step.** The database Secret is created by hand before the first sync, because Argo CD renders the chart without cluster access.
 - **Single NAT gateway.** Cheaper, but a single point of failure. Production would use one per Availability Zone.
 - **PostgreSQL runs inside the cluster.** Fine for this project. Production would use a managed database such as Amazon RDS.

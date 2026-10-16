@@ -31,7 +31,7 @@ variable "kubernetes_version" {
 variable "node_instance_types" {
   description = "Instance types for the worker nodes"
   type        = list(string)
-  default     = ["t3.medium"]
+  default     = ["m7i-flex.large"]
 }
 
 variable "node_min_size" {

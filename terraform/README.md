@@ -11,7 +11,7 @@ Terraform builds the AWS infrastructure that runs the app in the cloud: a VPC an
 | Private subnets | 2, one per Availability Zone, where the worker nodes run |
 | NAT gateway | 1, so private nodes can pull images (one per AZ in production) |
 | EKS cluster | `stockwise-dev-eks`, Kubernetes 1.34, public API endpoint |
-| Managed node group | `t3.medium`, minimum 2, desired 2, maximum 4 |
+| Managed node group | `m7i-flex.large` (2 vCPU, 8 GiB, free-tier eligible), minimum 2, desired 2, maximum 4 |
 | Add-ons | CoreDNS, kube-proxy, VPC CNI, EKS Pod Identity Agent |
 
 | File | Purpose |
