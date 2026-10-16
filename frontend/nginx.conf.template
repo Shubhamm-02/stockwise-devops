@@ -1,5 +1,9 @@
-# Rendered at container start: ${BACKEND_URL} is replaced from the environment.
+# Rendered at container start: ${BACKEND_URL} and ${NGINX_LOCAL_RESOLVERS} come from the environment.
 server {
+    # Resolve the backend name per request, not once at startup, so nginx still starts
+    # when DNS is not ready yet (for example right after a cluster restart).
+    resolver ${NGINX_LOCAL_RESOLVERS} valid=10s ipv6=off;
+
     listen 8080;
     server_name _;
     root /usr/share/nginx/html;
@@ -14,7 +18,8 @@ server {
 
     # API calls go to the backend (Docker Compose, or a port-forward in Kubernetes)
     location /api/ {
-        proxy_pass ${BACKEND_URL};
+        set $backend_upstream ${BACKEND_URL};
+        proxy_pass $backend_upstream;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

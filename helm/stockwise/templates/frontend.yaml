@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           env:
             - name: BACKEND_URL
-              value: "http://{{ include "stockwise.backendName" . }}:{{ .Values.backend.port }}"
+              value: "http://{{ include "stockwise.backendName" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.backend.port }}"
           ports:
             - name: http
               containerPort: {{ .Values.frontend.port }}
