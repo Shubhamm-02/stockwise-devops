@@ -2,13 +2,13 @@
 
 **Name:** Shubham Shah · **Roll Number:** 10316
 
-The application is deployed with the Helm chart in [`helm/stockwise`](../helm/stockwise). `kubernetes/namespace.yaml` creates the namespace. `k8s/namespace.yaml` is an identical copy at the path the grading rubric names.
+The application is deployed with the Helm chart in [`helm/stockwise`](../helm/stockwise). `k8s/namespace.yaml` creates the namespace. `k8s/namespace.yaml` is an identical copy at the path the grading rubric names.
 
 ## Kubernetes objects
 
 | Object | Purpose | Template |
 |---|---|---|
-| Namespace `stockwise` | Isolates the app | `kubernetes/namespace.yaml` |
+| Namespace `stockwise` | Isolates the app | `k8s/namespace.yaml` |
 | Deployment `stockwise-backend` | FastAPI API, 2 to 5 pods | `templates/backend.yaml` |
 | Deployment `stockwise-frontend` | React app on nginx, 2 pods | `templates/frontend.yaml` |
 | StatefulSet `stockwise-postgres` | PostgreSQL with its own volume | `templates/postgres.yaml` |
@@ -39,12 +39,12 @@ minikube addons enable ingress
 minikube addons enable metrics-server
 
 # Build the images and load them into minikube
-docker build -t stockwise-backend:local application/backend
-docker build -t stockwise-frontend:local application/frontend
+docker build -t stockwise-backend:local backend
+docker build -t stockwise-frontend:local frontend
 minikube image load stockwise-backend:local
 minikube image load stockwise-frontend:local
 
-kubectl apply -f kubernetes/namespace.yaml
+kubectl apply -f k8s/namespace.yaml
 helm upgrade --install stockwise helm/stockwise -n stockwise -f helm/stockwise/values-local.yaml --wait
 kubectl get pods,svc,ingress,hpa,pvc -n stockwise
 ```
