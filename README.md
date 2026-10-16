@@ -3,7 +3,8 @@
 **Name:** Shubham Shah  
 **Roll Number:** 10316  
 **Session 21:** Final DevOps Project and Troubleshooting  
-**Repository:** https://github.com/Shubhamm-02/stockwise-devops (public)
+**Repository:** https://github.com/Shubhamm-02/stockwise-devops (public)  
+**PPT and Demo:** [StockWise presentation (PDF)](https://github.com/Shubhamm-02/stockwise-devops/blob/main/presentation/StockWise-Presentation.pdf) · [HTML version with speaker notes](presentation/StockWise-Presentation.html)
 
 StockWise is an inventory management app for a small electronics store. Staff can add products, track stock levels, adjust quantities as goods arrive or ship, and see which items need reordering. Around the app sits the full DevOps toolchain from the course: Git, CI/CD, DevSecOps, Docker, Kubernetes, Helm, Terraform, monitoring and GitOps.
 
